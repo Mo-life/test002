@@ -1,0 +1,26 @@
+name: 导出ARM64 Docker镜像
+on: workflow_dispatch
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 启用QEMU多架构模拟
+        uses: docker/setup-qemu-action@v3
+
+      - name: 拉取arm64架构全部镜像
+        run: |
+          docker pull --platform linux/arm64 python:3.11-slim
+          docker pull --platform linux/arm64 taigaio/taiga-front:latest
+          docker pull --platform linux/arm64 postgres:14
+          docker pull --platform linux/arm64 redis:6-alpine
+
+      - name: 打包镜像为tar离线包
+        run: |
+          docker save python:3.11-slim taigaio/taiga-front:latest postgres:14 redis:6-alpine -o arm64-base-images.tar
+
+      - name: 上传镜像包为下载产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: arm64-docker-images
+          path: arm64-base-images.tar
