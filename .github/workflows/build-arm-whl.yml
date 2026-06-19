@@ -5,24 +5,22 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # 核心：检出仓库代码，拿到requirements.txt
+      - name: 检出仓库代码
+        uses: actions/checkout@v4
+
       - name: 启用QEMU ARM模拟
         uses: docker/setup-qemu-action@v3
 
-      - name: 拉取ARM64 Python镜像
-        run: docker pull --platform linux/arm64 python:3.11-slim
-
-      - name: 上传你的requirements.txt
-        uses: actions/upload-artifact@v4
-        with:
-          name: requirements
-          path: requirements.txt
-
-      - name: ARM环境下下载全部依赖whl包
+      - name: ARM64环境下载全部依赖whl包
         run: |
-          docker run --rm -v $PWD:/work --platform linux/arm64 python:3.11-slim bash -c "
-            cd /work
-            pip wheel -r requirements.txt -w ./whl
-          "
+          docker run --rm \
+            -v $PWD:/work \
+            --platform linux/arm64 python:3.11-slim \
+            bash -c "
+              cd /work
+              pip wheel -r requirements.txt -w ./whl
+            "
 
       - name: 打包whl依赖包
         run: zip -r taiga-back-whl-arm64.zip whl/
