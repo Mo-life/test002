@@ -20,7 +20,7 @@ jobs:
             --platform linux/arm64 \
             -f ./docker/Dockerfile.front \
             -t taiga-front:custom \
-            ./taiga-custom/taiga-front
+            ./dist
 
       - name: 导出离线镜像tar包
         run: docker save -o taiga-front-arm64.tar taiga-front:custom
