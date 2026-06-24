@@ -1,9 +1,9 @@
 name: 导出ARM64 Docker前端镜像
 on:
-  workflow_dispatch: # 支持手动点击运行，无需提交代码触发
+  workflow_dispatch:
 jobs:
   build-arm64-front:
-    runs-on: ubuntu-24.04-arm # 强制ARM64架构构建机器
+    runs-on: ubuntu-24.04-arm
     steps:
       - name: 拉取仓库代码
         uses: actions/checkout@v4
@@ -18,9 +18,9 @@ jobs:
         run: |
           docker build \
             --platform linux/arm64 \
-            -f ./docker/Dockerfile.front \
+            -f ./Dockerfile.front \
             -t taiga-front:custom \
-            ./dist
+            .
 
       - name: 导出离线镜像tar包
         run: docker save -o taiga-front-arm64.tar taiga-front:custom
@@ -30,4 +30,4 @@ jobs:
         with:
           name: taiga-front-arm64-image
           path: taiga-front-arm64.tar
-          retention-days: 30 # 制品保留30天，可自行修改
+          retention-days: 30
