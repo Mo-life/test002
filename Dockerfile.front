@@ -1,4 +1,5 @@
 FROM nginx:alpine
-COPY dist /usr/share/nginx/html
+# 上下文直接是dist目录，复制当前目录所有文件
+COPY . /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
