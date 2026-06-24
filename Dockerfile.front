@@ -1,5 +1,5 @@
 FROM nginx:alpine
-# 上下文直接是dist目录，复制当前目录所有文件
-COPY . /usr/share/nginx/html
+# 构建上下文是仓库根目录，直接复制dist文件夹到nginx网页目录
+COPY dist /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
